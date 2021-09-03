@@ -35,24 +35,6 @@ public class TaskControllerTest extends TaskManagerApplicationTest {
 		super.setUp();
 	}
 
-	@Test
-	public void getUserTasksShouldReturnTasks() throws Exception {
-		Task task1 = new Task();
-		task1.setId(1L);
-		Task task2 = new Task();
-		task2.setId(2L);
-
-		when(taskService.getTasks(Mockito.anyString())).thenReturn(Lists.newArrayList(task1, task2));
-		String uri = "/tasks/user-tasks/anyuser";
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
-
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
-		String content = mvcResult.getResponse().getContentAsString();
-		Task[] taskList = mapFromJson(content, Task[].class);
-		assertEquals(2, taskList.length);
-	}
 
 	@Test
 	public void getTasksOnSearchShouldReturnTasks() throws Exception {

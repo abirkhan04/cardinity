@@ -2,18 +2,14 @@ package com.cardinity.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.beans.support.PropertyComparator;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.cardinity.pojo.Project;
-import com.cardinity.pojo.Task;
 import com.cardinity.pojo.User;
 import com.cardinity.repositories.ProjectRepository;
 import com.cardinity.repositories.UserRepository;
@@ -21,6 +17,7 @@ import com.cardinity.util.AppConstants;
 
 @Service
 public class ProjectService {
+
 	@Autowired
 	private ProjectRepository<Project> projectRepository;
 
@@ -32,48 +29,31 @@ public class ProjectService {
 	}
 
 	public Project delete(Long id) {
-		Optional<Project> projectOptional = projectRepository.findById(id);
+		Optional<Project> project = projectRepository.findByUserAndId(getUser(), id);
+		if (project.isEmpty())
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
 		projectRepository.deleteById(id);
-		return projectOptional.get();
+		return project.get();
 	}
 
-	public PagedListHolder<Project> getPagedProjects(String username, Integer pageNumber, Integer pageSize,
-			Optional<String> search, Optional<String> sortBy) {
-		List<Project> projects = null;
-		User user = null;
-		if (username != null)
-			user = userRepository.findByUsername(username);
-		PagedListHolder<Project> page = new PagedListHolder<Project>();
-		page.setPageSize(pageSize);
-		if (user != null)
-			projects = (List<Project>) projectRepository.findByUser(user);
-		else
-			projects = (List<Project>) projectRepository.findAll();
-		if (search.isPresent() && !search.get().isEmpty()) {
-			projects = projects.stream().filter((project) -> project.getName().contains(search.get()))
-					.collect(Collectors.toList());
-		}
-		if (pageNumber * pageSize > projects.size() + pageSize) {
-			pageNumber = 0;
-		}
-		page.setPage(pageNumber);
-		if (sortBy.isPresent()) {
-			PropertyComparator.sort(projects, new MutableSortDefinition(sortBy.get(), true, true));
-		}
-		page.setSource(projects);
-		return page;
-	}
-
-	public List<Project> getProjects(String username) {
-		if (username == null)
-			return (List<Project>) projectRepository.findAll();
+	public List<Project> getProjectsForUser(String username) {
 		return projectRepository.findByUser(userRepository.findByUsername(username));
 	}
 
-	public Project getProject(Long id) {
-		Optional<Project> project = projectRepository.findById(id);
-		if(project.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
-		return project.get();
+	public List<Project> getProjects() {
+		return projectRepository.findByUser(getUser());
+	}
+
+	private User getUser() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		return userRepository.findByUsername(username);
+	}
+
+	public Project addUser(Project project) {
+		if (project.getUser() == null) {
+			project.setUser(getUser());
+		}
+		return project;
 	}
 
 }

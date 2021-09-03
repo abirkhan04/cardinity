@@ -34,7 +34,7 @@ public class ProjectControllerTest extends TaskManagerApplicationTest {
 		Project project2 = new Project();
 		project2.setId(2L);
 
-		when(projectService.getProjects(Mockito.anyString())).thenReturn(Lists.newArrayList(project1, project2));
+		when(projectService.getProjectsForUser(Mockito.anyString())).thenReturn(Lists.newArrayList(project1, project2));
 		String uri = "/projects/user-projects/anyuser";
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();

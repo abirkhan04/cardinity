@@ -1,13 +1,10 @@
 package com.cardinity.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,23 +29,9 @@ public class TaskController {
 	@Autowired
 	private TaskService taskService;
 
-	@GetMapping(value = "paged-tasks/{page-number}/{page-size}")
-	public PagedListHolder<Task> getPagedtasks(@Valid @PathVariable("page-number") @Min(1) int pageNumber,
-			@PathVariable("page-size") @Min(2) int pageSize, @RequestParam Optional<String> search,
-			@RequestParam(required = false) Optional<String> sortBy) {
-		return taskService.getPagedTasks(null, pageNumber - 1, pageSize, search, sortBy);
-	}
-
-	@GetMapping(value = "paged-user-tasks/{username}/{page-number}/{page-size}")
-	public PagedListHolder<Task> getPagedtasksForUser(@Valid @PathVariable String username,
-			@PathVariable("page-number") @Min(1) int pageNumber, @PathVariable("page-size") @Min(2) int pageSize,
-			@RequestParam Optional<String> search, @RequestParam(required = false) Optional<String> sortBy) {
-		return taskService.getPagedTasks(username, pageNumber - 1, pageSize, search, sortBy);
-	}
-
 	@GetMapping(value = "user-tasks/{username}")
 	public List<Task> gettasksForUser(@PathVariable String username) {
-		return taskService.getTasks(username);
+		return taskService.getTasksForUser(username);
 	}
 
 	@GetMapping(value = "task/{id}")
@@ -57,7 +40,7 @@ public class TaskController {
 	}
 
 	@GetMapping(value = "tasks")
-	public List<Task> getTasksBySearchParams(@RequestParam("project-id") String projectId, @RequestParam String status,
+	public List<Task> getTasks(@RequestParam("project-id") String projectId, @RequestParam String status,
 			@RequestParam String date) {
 		return taskService.getTasks(Long.valueOf(projectId), Status.valueOf(status), date);
 	}
@@ -79,7 +62,7 @@ public class TaskController {
 
 	@PostMapping(value = "task")
 	public @ResponseBody Task postTask(@Valid @RequestBody Task task) {
-		return taskService.save(task);
+		return taskService.save(taskService.addUser(task));
 	}
 
 	@PutMapping(value = "task")

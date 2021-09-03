@@ -24,7 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] AUTH_WHITELIST = { "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs",
 			"/webjars/**" };
 
-	private static final String[] ADMIN_ACCESS_URLS = {"/tasks/paged-user-tasks/**", "/projects/paged-user-projects/**"};
+	private static final String[] ADMIN_ACCESS_URLS = {"/tasks/user-tasks/**", "/projects/user-projects/**"};
 
 	@Autowired
 	private DataSource dataSource;

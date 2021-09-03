@@ -13,6 +13,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,36 +43,10 @@ public class TaskService {
 	}
 
 	public Task delete(Long id) {
-		Optional<Task> taskOptional = taskRepository.findById(id);
+		Optional<Task> task = taskRepository.findByUserAndId(getUser(), id);
+		if(task.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
 		taskRepository.deleteById(id);
-		return taskOptional.get();
-	}
-
-	public PagedListHolder<Task> getPagedTasks(String username, Integer pageNumber, Integer pageSize,
-			Optional<String> search, Optional<String> sortBy) {
-		List<Task> tasks = null;
-		User user = null;
-		if (username != null)
-			user = userRepository.findByUsername(username);
-		PagedListHolder<Task> page = new PagedListHolder<Task>();
-		page.setPageSize(pageSize);
-		if (user != null)
-			tasks = (List<Task>) taskRepository.findByUser(user);
-		else
-			tasks = (List<Task>) taskRepository.findAll();
-		if (search.isPresent() && !search.get().isEmpty()) {
-			tasks = tasks.stream().filter((task) -> task.getDescription().contains(search.get()))
-					.collect(Collectors.toList());
-		}
-		if (pageNumber * pageSize > tasks.size() + pageSize) {
-			pageNumber = 0;
-		}
-		page.setPage(pageNumber);
-		if (sortBy.isPresent()) {
-			PropertyComparator.sort(tasks, new MutableSortDefinition(sortBy.get(), true, true));
-		}
-		page.setSource(tasks);
-		return page;
+		return task.get();
 	}
 
 	public Task checkTaskisNotClosed(Task task) {
@@ -82,23 +57,23 @@ public class TaskService {
 	}
 
 	public List<Task> getTaskByProject(Long projectId) {
-		return taskRepository.findByProject(projectRepository.findById(projectId).get());
+		return taskRepository.findByUserAndProject(getUser(), projectRepository.findById(projectId).get());
 	}
 
 	public List<Task> getTaskByStatus(Status status) {
-		return taskRepository.findByStatus(status);
+		return taskRepository.findByUserAndStatus(getUser(),status);
 	}
 
 	public List<Task> getExpiredTask(String dateString) {
-		return taskRepository.findExpiredTasks(dateStringToUtilDate(dateString));
+		return taskRepository.findExpiredTasks(dateStringToUtilDate(dateString), getUser().getId());
 	}
 
-	public List<Task> getTasks(String username) {
+	public List<Task> getTasksForUser(String username) {
 		return taskRepository.findByUser(userRepository.findByUsername(username));
 	}
 
 	public List<Task> getTasks(Long projectId, Status status, String date) {
-		return taskRepository.findByParams(projectId, status, dateStringToUtilDate(date));
+		return taskRepository.findByParams(projectId, status, dateStringToUtilDate(date), getUser().getId());
 	}
 
 	public Task getTask(Long id) {
@@ -114,4 +89,17 @@ public class TaskService {
 		ZonedDateTime dateZ = date.atStartOfDay(z);
 		return Date.from(dateZ.toInstant());
 	}
+	
+	private User getUser() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		return userRepository.findByUsername(username);
+	}
+	
+	public Task addUser(Task task) {
+		if(task.getUser() == null) {
+			task.setUser(getUser());	
+		}
+		return task;
+	}
+
 }
