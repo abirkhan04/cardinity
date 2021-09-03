@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Length;
+
+import com.cardinity.enums.Status;
 
 import lombok.Data;
 
@@ -32,6 +36,9 @@ public class Task {
 
 	@Column(name = "due_date")
 	private Date dueDate;
+
+	@Enumerated(EnumType.STRING)
+	private Status status;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "user_id")

@@ -1,5 +1,6 @@
 package com.cardinity.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cardinity.enums.Status;
 import com.cardinity.pojo.Task;
 import com.cardinity.service.TaskService;
 
@@ -44,6 +46,21 @@ public class TaskController {
 		return taskService.getPagedTasks(username, pageNumber - 1, pageSize, search, sortBy);
 	}
 
+	@GetMapping(value = "tasks/{project-id}")
+	public List<Task> getTasksByProject(@PathVariable("project-id") String projectId) {
+		return taskService.getTaskByProject(Long.valueOf(projectId));
+	}
+
+	@GetMapping(value = "tasks-of/{status}")
+	public List<Task> getTasksByStatus(@PathVariable String status) {
+		return taskService.getTaskByStatus(Status.valueOf(status));
+	}
+
+	@GetMapping(value = "expired-tasks/{date}")
+	public List<Task> getTasksByDate(@PathVariable String date) {
+		return taskService.getExpiredTask(date);
+	}
+
 	@PostMapping(value = "task")
 	public @ResponseBody Task postTask(@Valid @RequestBody Task task) {
 		return taskService.save(task);
@@ -51,7 +68,7 @@ public class TaskController {
 
 	@PutMapping(value = "task")
 	public @ResponseBody Task puttask(@Valid @RequestBody Task task) throws Exception {
-		return taskService.save(task);
+		return taskService.save(taskService.checkTaskisNotClosed(task));
 	}
 
 	@DeleteMapping(value = "task/{id}")

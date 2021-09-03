@@ -1,5 +1,6 @@
 package com.cardinity.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -26,9 +27,14 @@ import com.cardinity.service.ProjectService;
 @Validated
 @RequestMapping(value = "projects")
 public class ProjectController {
-	
+
 	@Autowired
 	private ProjectService projectService;
+
+	@GetMapping(value = "projects")
+	public List<Project> getProjects() {
+		return projectService.getProjects();
+	}
 
 	@GetMapping(value = "paged-projects/{page-number}/{page-size}")
 	public PagedListHolder<Project> getPagedprojects(@Valid @PathVariable("page-number") @Min(1) int pageNumber,
