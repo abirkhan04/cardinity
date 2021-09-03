@@ -12,7 +12,6 @@ USER can only access own tasks and projects .Authentication credentials are stor
 USER and ADMIN are able to:
 
 • Create Project
-
 • Get all projects
 • Delete project
 • Create task
