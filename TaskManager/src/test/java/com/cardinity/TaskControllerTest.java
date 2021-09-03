@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 
+import com.cardinity.enums.Status;
+import com.cardinity.pojo.Project;
 import com.cardinity.pojo.Task;
 import com.cardinity.service.TaskService;
 
@@ -66,6 +68,8 @@ public class TaskControllerTest extends TaskManagerApplicationTest {
 	public void postTaskShouldReturnTask() throws Exception {
 		Task task = new Task();
 		task.setDescription("Task Description");
+		task.setProject(new Project());
+		task.setStatus(Status.OPEN);
 		when(taskService.save(Mockito.any())).thenReturn(task);
 		String inputJson = mapToJson(task);
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(baseUri).accept(MediaType.APPLICATION_JSON)
@@ -81,6 +85,8 @@ public class TaskControllerTest extends TaskManagerApplicationTest {
 		Task task = new Task();
 		task.setDescription("Task Description");
 		task.setId(1L);
+		task.setProject(new Project());
+		task.setStatus(Status.OPEN);
 		when(taskService.save(Mockito.any())).thenReturn(task);
 		String inputJson = mapToJson(task);
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(baseUri).accept(MediaType.APPLICATION_JSON)
