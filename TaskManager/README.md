@@ -12,27 +12,45 @@ USER can only access own tasks and projects .Authentication credentials are stor
 USER and ADMIN are able to:
 
 • Create Project
+
 • Get all projects
+
 • Delete project
+
 • Create task
+
 • Edit task (change description, status, due date). Closed tasks cannot be edited.
+
 • Get task
+
 • Search tasks
    Get all by project
    Get expired tasks (due date in the past)
    By status
    
+
 ADMIN additionally are able to:
+
 • Get all tasks by user
+
 • Get all projects by user
 
+
+
 Task properties includes:
+
 • Description (Mandatory)
+
 • Status (Mandatory), OPEN/IN_PROGRESS/CLOSED
+
 • Project (Mandatory)
+
 • Due date (Optional)
+
 Project properties:
+
 • Name (Mandatory)
+
 
 REST API are validating data and return validation errors if data is invalid
 DB tables are automatically created (if doesn't exist) on application startup.
