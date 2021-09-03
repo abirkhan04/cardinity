@@ -75,9 +75,9 @@ public class TaskService {
 	}
 
 	public Task checkTaskisNotClosed(Task task) {
-		if (task.getStatus().equals(Status.CLOSED)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is closed");
-		}
+		if (task.getId() != null)
+			if (taskRepository.findById(task.getId()).get().getStatus().equals(Status.CLOSED))
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is closed");
 		return task;
 	}
 
