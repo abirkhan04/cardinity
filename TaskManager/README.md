@@ -11,6 +11,7 @@ We need to insert USER and ADMIN roles in the database once created automaticall
   Authentication credentials are stored in DB
 
 USER and ADMIN are able to:
+
 • Create project
 • Get all projects
 • Delete project
