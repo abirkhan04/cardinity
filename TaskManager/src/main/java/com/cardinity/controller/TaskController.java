@@ -57,7 +57,7 @@ public class TaskController {
 	}
 
 	@GetMapping(value = "tasks")
-	public List<Task> getTasksByProject(@RequestParam("project-id") String projectId, @RequestParam String status,
+	public List<Task> getTasksBySearchParams(@RequestParam("project-id") String projectId, @RequestParam String status,
 			@RequestParam String date) {
 		return taskService.getTasks(Long.valueOf(projectId), Status.valueOf(status), date);
 	}
