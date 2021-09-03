@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -37,6 +38,7 @@ public class Task {
 	@Column(name = "due_date")
 	private Date dueDate;
 
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
@@ -44,6 +46,7 @@ public class Task {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@NotNull
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "project_id")
 	private Project project;
