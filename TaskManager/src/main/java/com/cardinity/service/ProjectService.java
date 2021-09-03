@@ -57,8 +57,10 @@ public class ProjectService {
 		return page;
 	}
 
-	public List<Project> getProjects() {
-		return (List<Project>) projectRepository.findAll();
+	public List<Project> getProjects(String username) {
+		if(username==null)
+		   return (List<Project>) projectRepository.findAll();
+		return projectRepository.findByUser(userRepository.findByUsername(username));
 	}
 
 }

@@ -46,6 +46,11 @@ public class TaskController {
 		return taskService.getPagedTasks(username, pageNumber - 1, pageSize, search, sortBy);
 	}
 
+	@GetMapping(value = "user-tasks/{username}")
+	public List<Task> gettasksForUser(@PathVariable String username) {
+		return taskService.getTasks(username);
+	}
+
 	@GetMapping(value = "tasks/{project-id}")
 	public List<Task> getTasksByProject(@PathVariable("project-id") String projectId) {
 		return taskService.getTaskByProject(Long.valueOf(projectId));

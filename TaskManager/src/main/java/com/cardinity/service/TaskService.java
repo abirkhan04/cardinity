@@ -97,4 +97,8 @@ public class TaskService {
 		return taskRepository.findExpiredTasks(dateUtil);
 	}
 
+	public List<Task> getTasks(String username) {
+		return taskRepository.findByUser(userRepository.findByUsername(username));
+	}
+
 }
