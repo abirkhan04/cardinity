@@ -1,6 +1,5 @@
 package com.cardinity.service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -24,6 +23,7 @@ import com.cardinity.pojo.User;
 import com.cardinity.repositories.ProjectRepository;
 import com.cardinity.repositories.TaskRepository;
 import com.cardinity.repositories.UserRepository;
+import com.cardinity.util.AppConstants;
 
 @Service
 public class TaskService {
@@ -99,6 +99,13 @@ public class TaskService {
 
 	public List<Task> getTasks(Long projectId, Status status, String date) {
 		return taskRepository.findByParams(projectId, status, dateStringToUtilDate(date));
+	}
+
+	public Task getTask(Long id) {
+		Optional<Task> task = taskRepository.findById(id);
+		if (task.isEmpty())
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
+		return taskRepository.findById(id).get();
 	}
 
 	private Date dateStringToUtilDate(String dateString) {

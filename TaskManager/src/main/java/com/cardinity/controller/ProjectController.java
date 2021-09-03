@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cardinity.pojo.Project;
-import com.cardinity.pojo.Task;
 import com.cardinity.service.ProjectService;
 
 @RestController
@@ -35,6 +34,11 @@ public class ProjectController {
 	@GetMapping(value = "projects")
 	public List<Project> getProjects() {
 		return projectService.getProjects(null);
+	}
+
+	@GetMapping(value = "project/{id}")
+	public Project getTask(@PathVariable String id) {
+		return projectService.getProject(Long.valueOf(id));
 	}
 
 	@GetMapping(value = "paged-projects/{page-number}/{page-size}")

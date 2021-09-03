@@ -51,6 +51,11 @@ public class TaskController {
 		return taskService.getTasks(username);
 	}
 
+	@GetMapping(value = "task/{id}")
+	public Task getTask(@PathVariable String id) {
+		return taskService.getTask(Long.valueOf(id));
+	}
+
 	@GetMapping(value = "tasks")
 	public List<Task> getTasksByProject(@RequestParam("project-id") String projectId, @RequestParam String status,
 			@RequestParam String date) {
