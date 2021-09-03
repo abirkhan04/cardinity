@@ -20,4 +20,7 @@ public interface TaskRepository<T> extends PagingAndSortingRepository<Task, Long
 
 	@Query("Select t from Task t where t.dueDate < ?1")
 	List<Task> findExpiredTasks(Date date);
+
+	@Query("Select t from Task t where t.project.id = ?1 and t.status = ?2 and t.dueDate < ?3")
+	List<Task> findByParams(Long projectId, Status status, Date date);
 }

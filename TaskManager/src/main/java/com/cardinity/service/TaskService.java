@@ -90,15 +90,21 @@ public class TaskService {
 	}
 
 	public List<Task> getExpiredTask(String dateString) {
-		LocalDate date = LocalDate.parse(dateString);
-		ZoneId z = ZoneId.of("Asia/Kolkata");
-		ZonedDateTime dateZ = date.atStartOfDay(z);
-		Date dateUtil =Date.from(dateZ.toInstant());
-		return taskRepository.findExpiredTasks(dateUtil);
+		return taskRepository.findExpiredTasks(dateStringToUtilDate(dateString));
 	}
 
 	public List<Task> getTasks(String username) {
 		return taskRepository.findByUser(userRepository.findByUsername(username));
 	}
 
+	public List<Task> getTasks(Long projectId, Status status, String date) {
+		return taskRepository.findByParams(projectId, status, dateStringToUtilDate(date));
+	}
+
+	private Date dateStringToUtilDate(String dateString) {
+		LocalDate date = LocalDate.parse(dateString);
+		ZoneId z = ZoneId.of("Asia/Kolkata");
+		ZonedDateTime dateZ = date.atStartOfDay(z);
+		return Date.from(dateZ.toInstant());
+	}
 }
