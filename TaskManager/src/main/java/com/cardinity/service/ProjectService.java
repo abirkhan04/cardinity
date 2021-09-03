@@ -25,7 +25,7 @@ public class ProjectService {
 	private UserRepository<User> userRepository;
 
 	public Project save(Project project) {
-		return projectRepository.save(project);
+		return projectRepository.save(checkUsersProject(project));
 	}
 
 	public Project delete(Long id) {
@@ -52,6 +52,15 @@ public class ProjectService {
 	public Project addUser(Project project) {
 		if (project.getUser() == null) {
 			project.setUser(getUser());
+		}
+		return project;
+	}
+
+	private Project checkUsersProject(Project project) {
+		if (project.getId() != null) {
+			Optional<Project> projectOptional = projectRepository.findByUserAndId(getUser(), project.getId());
+			if (projectOptional.isEmpty())
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
 		}
 		return project;
 	}

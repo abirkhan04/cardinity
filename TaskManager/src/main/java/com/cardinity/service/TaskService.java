@@ -39,12 +39,13 @@ public class TaskService {
 	private ProjectRepository<Project> projectRepository;
 
 	public Task save(Task task) {
-		return taskRepository.save(task);
+		return taskRepository.save(checkUsersTask(task));
 	}
 
 	public Task delete(Long id) {
 		Optional<Task> task = taskRepository.findByUserAndId(getUser(), id);
-		if(task.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
+		if (task.isEmpty())
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
 		taskRepository.deleteById(id);
 		return task.get();
 	}
@@ -61,7 +62,7 @@ public class TaskService {
 	}
 
 	public List<Task> getTaskByStatus(Status status) {
-		return taskRepository.findByUserAndStatus(getUser(),status);
+		return taskRepository.findByUserAndStatus(getUser(), status);
 	}
 
 	public List<Task> getExpiredTask(String dateString) {
@@ -89,15 +90,24 @@ public class TaskService {
 		ZonedDateTime dateZ = date.atStartOfDay(z);
 		return Date.from(dateZ.toInstant());
 	}
-	
+
 	private User getUser() {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		return userRepository.findByUsername(username);
 	}
-	
+
 	public Task addUser(Task task) {
-		if(task.getUser() == null) {
-			task.setUser(getUser());	
+		if (task.getUser() == null) {
+			task.setUser(getUser());
+		}
+		return task;
+	}
+
+	private Task checkUsersTask(Task task) {
+		if (task.getId() != null) {
+			Optional<Task> taskOptional = taskRepository.findByUserAndId(getUser(), task.getId());
+			if (taskOptional.isEmpty())
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, AppConstants.NOT_FOUND);
 		}
 		return task;
 	}
