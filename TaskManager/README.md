@@ -7,12 +7,12 @@ DB and REST APIS for task manager are created using JSON format for interchange.
 Endpoints are secured with Spring Security. Users, Roles are database managed and configurable.
 We need to insert USER and ADMIN roles in the database once created automatically for the first time. 
 
-  USER can only access own tasks and projects
-  Authentication credentials are stored in DB
+USER can only access own tasks and projects .Authentication credentials are stored in DB
 
 USER and ADMIN are able to:
 
-• Create project
+• Create Project
+
 • Get all projects
 • Delete project
 • Create task
