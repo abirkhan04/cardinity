@@ -20,21 +20,25 @@ import lombok.Data;
 @Entity
 @Table(name = "tasks")
 public class Task {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
-	
-	@Length(min=10, max=500, message="Description must be between 10 to 500 characters")
-	@Column(length=500)
+
+	@Length(min = 10, max = 500, message = "Description must be between 10 to 500 characters")
+	@Column(length = 500)
 	private String description;
-	
-	@Column(name="due_date")
+
+	@Column(name = "due_date")
 	private Date dueDate;
-	
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinColumn(name="user_id")
+
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "user_id")
 	private User user;
+
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "project_id")
+	private Project project;
 
 }

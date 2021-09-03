@@ -8,7 +8,6 @@ node_modules/
 dist/
 target/
 .settings/
-.classpath
 
 # Compiled Java class files
 *.class
