@@ -61,10 +61,10 @@ project
 Instructions to run the application:
 1. If you have maven installed then clone the repository. 
 2. Go to project root folder and run: mvn clean package -Dmaven.test.skip=true
-3. This will create task-manager.jar in the target directory.
+3. This will create 'task-manager.jar' in the target directory.
 4. Please take the jar (task-manager.jar) file , don't take original file from there.
 5. Open MySQL and create a database named:  taskmanager
 6. Open windows powershell and run : java -jar task-manager.jar.
 7. Above command will create all necessary tables.
-8. Take the user.sql file from the root folder. Open it and run the queries which will create user `evaldas` as an administrator.
-9. Go to: http://localhost:8080/swagger-ui.html#/ . You will get swagger file to test all APIs. 
+8. Take the user.sql file from the root folder. Open it and run the queries which will create user `evaldas` as an administrator with password '1234'.
+9. Go to: http://localhost:8080/swagger-ui.html#/ . You will get swagger file to test all APIs.
