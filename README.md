@@ -56,3 +56,15 @@ REST API are validating data and return validation errors if data is invalid
 DB tables are automatically created (if doesn't exist) on application startup.
 App and DB designs are flexible enough to allow easily adding new properties for task and 
 project
+
+
+Instructions to run the application:
+1. If you have maven installed then clone the repository. 
+2. Go to project root folder and run: mvn clean package -Dmaven.test.skip=true
+3. The will create task-manager.jar in the target directory.
+4. Please take the jar (task-manager.jar) file , don't take original file from there.
+5. Open MySQL and create a database named:  taskmanager
+6. Open windows powershell and run : java -jar task-manager.jar.
+7. Above command will create all necessary tables.
+8. take the user.sql file from the root folder. Open it and run the queries which will create use `evaldas` as an administrator.
+9. Go to: http://localhost:8080/swagger-ui.html#/  . You will get swagger file to test all APIs. 
